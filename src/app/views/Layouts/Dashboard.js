@@ -6,6 +6,8 @@ import Header from '../Components/Header';
 import LeftDrawer from '../Components/LeftDrawer';
 import Data from '../Config/data';
 
+import './Dashboard.css';
+
 class App extends React.Component {
 
   constructor(props) {
@@ -73,7 +75,7 @@ class App extends React.Component {
           handleChangeNavDrawer={this.handleChangeRequestNavDrawer}
         />
 
-        <div style={styles.container}>
+        <div className="theme-font" style={styles.container}>
           {this.props.children}
         </div>
       </Swipeable >

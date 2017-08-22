@@ -1,9 +1,8 @@
 html * {
-  font-family: 'Quicksand', sans-serif !important;
+  /* font-family: 'Quicksand', sans-serif !important; */
 }
 
 body {
-  font-family: 'Quicksand', sans-serif !important;
   margin: 0;
   padding: 0;
   background-color: #f3f3f3

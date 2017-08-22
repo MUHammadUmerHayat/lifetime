@@ -1,7 +1,7 @@
 import { localDB } from '../db';
 import { storiesActions } from '../states/stories';
 
-const changeOpts = { since: 'now', live: true };
+const changeOpts = { since: 'now', live: true, timeout: false };
 
 /**
  * Pouchdb change listener

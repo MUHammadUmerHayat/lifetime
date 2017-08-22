@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import RaisedButton from 'material-ui/RaisedButton';
-import { Modal, Button, Tooltip, Popover, OverlayTrigger } from 'react-bootstrap';
 import TextField from 'material-ui/TextField';
-import Divider from 'material-ui/Divider';
 import Paper from 'material-ui/Paper';
+import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
+import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
+import IconAddPhoto from 'material-ui/svg-icons/image/add-a-photo';
+import { cyan600 } from 'material-ui/styles/colors';
 
-import { storiesActions } from '../../states/stories'; 
+import CustomHeader from './CustomHeader';
+
+import { storiesActions } from '../../states/stories';
 
 export default class AddForm extends Component {
   constructor(props) {
@@ -15,21 +19,20 @@ export default class AddForm extends Component {
     this.state = {
       title: '',
       content: '',
-      location: '',
+      location: 'Cityland Herrera Tower V.A. Rufino corner Valero Streets, Salcedo Village, Makati, 1227 Metro Manila',      
+      previewImage: '',
     };
 
     this.handleContentChange = this.handleContentChange.bind(this);
     this.handleLocationChange = this.handleLocationChange.bind(this);
     this.handleTitleChange = this.handleTitleChange.bind(this);
+    this.handleImageChanged = this.handleImageChanged.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.close = this.close.bind(this);
   }
 
-  onSubmit(e) {
-    e.preventDefault();
+  onSubmit() {
     this.context.store.dispatch(storiesActions.addStory(this.state));
-    this.close();
-    this.state = {};    
+    this.state = {};
   }
 
   handleTitleChange(e) {
@@ -44,14 +47,29 @@ export default class AddForm extends Component {
     this.setState({ location: e.target.value });
   }
 
-  close() {
-    this.props.handleCloseForm();
+  handleImageChanged(e) {
+    const reader = new FileReader();
+    const imageFile = e.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        imageFile,
+        imageBinary: reader.result,
+        previewImage: reader.result,
+      });
+    };
+
+    reader.readAsDataURL(imageFile);
   }
 
   render() {
     const styles = {
       paper: {
         padding: 30,
+        paddingTop: 0,
+        paddingBottom: 50,
+        height: 'inherit',
+        minHeight: '89vh',
       },
       buttons: {
         marginTop: 30,
@@ -62,53 +80,53 @@ export default class AddForm extends Component {
       },
     };
 
+    let actionType = 'edit';
+    if (this.state.title || this.state.content) actionType = 'save';
+
     return (
-      <div>
-        <Modal
+      <div className="theme-font">
+        <CustomHeader actionType={actionType} onSubmit={this.onSubmit} />
+        {/* <Modal
           style={{ paddingTop: 100 }}
           show={this.props.isOpen}
           onHide={this.close}
-        >
-          <Paper style={styles.paper}>
-            <h3 className="title">Add new story</h3>
+        > */}
+        <Paper style={styles.paper}>
+          <form onSubmit={this.onSubmit}>
+            <TextField
+              hintText="Title"
+              floatingLabelText="Title"
+              fullWidth
+              onChange={this.handleTitleChange}
+            />
 
-            <Divider />
-            <form onSubmit={this.onSubmit}>
+            <TextField
+              floatingLabelText="Write here"
+              fullWidth
+              multiLine
+              onChange={this.handleContentChange}
+            />
 
-              <TextField
-                hintText="Title"
-                floatingLabelText="Title"
-                fullWidth
-                onChange={this.handleTitleChange}
-              />
-
-              <TextField
-                hintText="Content"
-                floatingLabelText="Content"
-                fullWidth
-                multiLine
-                onChange={this.handleContentChange}
-              />
-
-              <TextField
-                hintText="Location"
-                floatingLabelText="Location"
-                fullWidth
-                onChange={this.handleLocationChange}
-              />
-
-              <div style={styles.buttons}>
-                <RaisedButton onClick={this.close} label="Cancel" />
-                <RaisedButton
-                  label="Save"
-                  style={styles.saveButton}
-                  type="submit"
-                  primary
-                />
+            {this.state.previewImage &&
+              <div>
+                <label htmlFor="image" style={{ fontSize: 16, color: cyan600, marginTop: 38 }}>Image attachment</label>
+                <img src={this.state.previewImage} className="img-responsive" alt="attachment" />
               </div>
-            </form>
-          </Paper>
-        </Modal>
+            }
+          </form>
+        </Paper>
+        <Paper zDepth={1}>
+          <BottomNavigation style={{ position: 'fixed', bottom: 0, borderTop: '1px solid #f1f1f1' }} selectedIndex={this.state.selectedIndex}>
+            <input type="file" accept="image/*" onChange={this.handleImageChanged} className="hidden" ref={(ref) => { this.inputFile = ref; }} />
+            <BottomNavigationItem
+              icon={<IconAddPhoto />}
+              onClick={() => this.inputFile.click()}
+            />
+            <BottomNavigationItem
+              icon={<IconLocationOn />}
+            />
+          </BottomNavigation>
+        </Paper>
       </div>
     );
   }
@@ -117,9 +135,3 @@ export default class AddForm extends Component {
 AddForm.contextTypes = {
   store: PropTypes.object.isRequired,
 };
-
-AddForm.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  handleCloseForm: PropTypes.func.isRequired,
-};
-

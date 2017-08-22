@@ -6,6 +6,7 @@ import TimelinePage from '../views/Pages/TimelinePage';
 import TablePage from '../views/Pages/TablePage';
 import NotFoundPage from '../views/Pages/NotFoundPage';
 import Dashboard from '../views/Layouts/Dashboard';
+import AddForm from '../views/Components/AddForm';
 
 /* eslint-disable react/prop-types */
 export default ({ requireAuth }) => (
@@ -15,6 +16,7 @@ export default ({ requireAuth }) => (
       <Route path="/timeline" name="Timeline" component={TimelinePage} />
       <Route path="/media" name="Photos & Videos" component={TablePage} />
     </Route>
+    <Route path="/timeline/add" component={AddForm} />
     <Route path="/login" component={LoginPage} />
     <Route path="/*" component={NotFoundPage} />
   </Router>
