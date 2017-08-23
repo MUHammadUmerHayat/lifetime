@@ -7,7 +7,6 @@ import { compose, getContext, withStateHandlers } from 'recompose';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import { cyan600 } from 'material-ui/styles/colors';
-import AddForm from '../../Components/AddForm';
 import DashboardView from '../../Layouts/DashboardView';
 import Story from '../../Components/Story';
 
@@ -50,7 +49,7 @@ const TimelinePage = ({
     title="Timeline"
   >
 
-    <Row style={{ marginRight: '-35px', marginLeft: '-30px', marginBottom: '-20px' }}>
+    <Row style={{ marginRight: '-35px', marginLeft: '-30px', marginBottom: '-20px', marginTop: '-1px' }}>
       {
         stories.length > 0 ? stories.sort((a, b) => a.id < b.id).map(story => (
           <Story
@@ -58,11 +57,11 @@ const TimelinePage = ({
             story={story}
           />
         )) : (
-            <div className="text-center" style={{ color: cyan600, marginTop: 200 }}>
-              <h2>No stories yet</h2>
-              <h4>Why not add one?</h4>
-            </div>
-          )
+          <div className="text-center" style={{ color: cyan600, marginTop: 200 }}>
+            <h2>No stories yet</h2>
+            <h4>Why not add one?</h4>
+          </div>
+        )
       }
     </Row>
 

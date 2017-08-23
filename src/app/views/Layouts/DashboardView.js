@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Grid } from 'react-bootstrap';
 
 export default function DashboardView(props) {
   return (

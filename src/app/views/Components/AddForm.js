@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog';
+import IconButton from 'material-ui/IconButton';
+import IconPlace from 'material-ui/svg-icons/maps/place';
+import IconAddLocation from 'material-ui/svg-icons/maps/add-location';
 import Paper from 'material-ui/Paper';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 import IconAddPhoto from 'material-ui/svg-icons/image/add-a-photo';
 import { cyan600 } from 'material-ui/styles/colors';
+import { Row, Col } from 'react-bootstrap';
 
 import CustomHeader from './CustomHeader';
+import { getCurrentAddress } from '../../utils/location';
 
 import { storiesActions } from '../../states/stories';
 
@@ -19,8 +24,9 @@ export default class AddForm extends Component {
     this.state = {
       title: '',
       content: '',
-      location: 'Cityland Herrera Tower V.A. Rufino corner Valero Streets, Salcedo Village, Makati, 1227 Metro Manila',      
+      location: '',
       previewImage: '',
+      isOpenLocationDialog: false,
     };
 
     this.handleContentChange = this.handleContentChange.bind(this);
@@ -44,7 +50,16 @@ export default class AddForm extends Component {
   }
 
   handleLocationChange(e) {
-    this.setState({ location: e.target.value });
+    getCurrentAddress('', (location, err) => {
+      if (location) {
+        this.setState({
+          location,
+          isOpenLocationDialog: false,
+        });
+      } else {
+        alert(err);
+      }
+    });
   }
 
   handleImageChanged(e) {
@@ -78,6 +93,21 @@ export default class AddForm extends Component {
       saveButton: {
         marginLeft: 5,
       },
+      medium: {
+        width: 96,
+        height: 96,
+        padding: 24,
+      },
+      mediumIcon: {
+        color: 'grey',
+        width: 48,
+        height: 48,
+      },
+    };
+
+    const customContentStyle = {
+      width: '100%',
+      maxWidth: 'none',
     };
 
     let actionType = 'edit';
@@ -107,6 +137,15 @@ export default class AddForm extends Component {
               onChange={this.handleContentChange}
             />
 
+            {this.state.location &&
+              <div>
+                <label htmlFor="image" style={{ fontSize: 16, color: cyan600, marginTop: 38 }}>Location</label>
+                <div style={{ color: 'grey' }}>
+                  <strong>{this.state.location}</strong>
+                </div>
+              </div>
+            }
+
             {this.state.previewImage &&
               <div>
                 <label htmlFor="image" style={{ fontSize: 16, color: cyan600, marginTop: 38 }}>Image attachment</label>
@@ -124,7 +163,37 @@ export default class AddForm extends Component {
             />
             <BottomNavigationItem
               icon={<IconLocationOn />}
+              onClick={() => this.setState({ isOpenLocationDialog: true })}
             />
+
+            <Dialog
+              modal
+              contentStyle={customContentStyle}
+              open={this.state.isOpenLocationDialog}
+            >
+              <Row>
+                <Col xs={6} className="text-right">
+                  <IconButton
+                    iconStyle={styles.mediumIcon}
+                    style={styles.medium}
+                    onClick={this.handleLocationChange}
+                  >
+                    <IconPlace />
+                  </IconButton><br />
+                  Get current &nbsp;
+                </Col>
+
+                <Col xs={6} className="text-left">
+                  <IconButton
+                    iconStyle={styles.mediumIcon}
+                    style={styles.medium}
+                  >
+                    <IconAddLocation />
+                  </IconButton><br />
+                  &nbsp;Pick a place
+                </Col>
+              </Row>
+            </Dialog>
           </BottomNavigation>
         </Paper>
       </div>

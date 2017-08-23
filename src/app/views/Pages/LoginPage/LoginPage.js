@@ -8,8 +8,7 @@ import { grey600 } from 'material-ui/styles/colors';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import Help from 'material-ui/svg-icons/action/help';
 import TextField from 'material-ui/TextField';
-import { Link } from 'react-router';
-import { compose, setPropTypes, withProps, getContext, withStateHandlers, pure } from 'recompose';
+import { compose, withProps, getContext, withStateHandlers, pure } from 'recompose';
 import { connect } from 'react-redux';
 
 import { authActions } from '../../../states/auth';
